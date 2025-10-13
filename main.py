@@ -377,13 +377,13 @@ def main():
         epilog="""
 Examples:
   # Analyze and provision with defaults
-  gitcloud --repo_url https://github.com/pytorch/examples
+  gitcloud --repo_url https://github.com/ichtrojan/go-todo
 
   # Specify provider and region
-  gitcloud --repo_url https://github.com/user/project --provider tencent --region ap-guangzhou
+  gitcloud --repo_url https://github.com/ichtrojan/go-todo --provider tencent --region ap-guangzhou
 
   # Specify model and API key
-  gitcloud --repo_url https://github.com/user/project --model deepseek --api-key YOUR_KEY
+  gitcloud --repo_url https://github.com/ichtrojan/go-todo --model deepseek --api-key YOUR_KEY
 
   # Clean up a session
   gitcloud clean session_20250113_143022
@@ -417,8 +417,6 @@ Examples:
                        help='API key for the AI model')
     parser.add_argument('--analyze-only', action='store_true',
                        help='Only analyze project, do not provision resources')
-    parser.add_argument('--save-dockerfile', action='store_true',
-                       help='Save recommended Dockerfile')
 
     args = parser.parse_args()
 
@@ -434,7 +432,7 @@ Examples:
         print("📦 GitHub Repository URL")
         print("="*70)
         print("Please enter the GitHub repository URL:")
-        print("Example: https://github.com/pytorch/examples")
+        print("Example: https://github.com/ichtrojan/go-todo")
         print()
         repo_url = clean_input(f"{Colors.CYAN}GitHub URL> {Colors.RESET}").strip()
 
