@@ -424,6 +424,8 @@ Examples:
                        help='Output file for analysis results')
     parser.add_argument('--save-dockerfile', action='store_true',
                        help='Save recommended Dockerfile')
+    parser.add_argument('--use-clone', action='store_true',
+                       help='Clone entire repository instead of using GitHub API (slower but more complete)')
 
     args = parser.parse_args()
 
@@ -514,7 +516,10 @@ Examples:
         import os
         os.environ['ANTHROPIC_API_KEY'] = api_key
 
-        result = analyze_cloud_services(args.github_url, verbose=True, model=model, session_dir=session_dir)
+        # Determine whether to use API or clone
+        use_api = not args.use_clone  # Default to API unless --use-clone is specified
+
+        result = analyze_cloud_services(args.github_url, verbose=True, model=model, session_dir=session_dir, use_api=use_api)
         docker_image = ""
 
         print_step("STEP 2: Analysis Results")

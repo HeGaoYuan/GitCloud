@@ -25,6 +25,7 @@ from .cloud_service_spec import (
     get_default_services_for_project
 )
 from .resource_spec import ResourceSpec
+from .github_fetcher import GitHubFetcher
 
 
 # ANSI color codes for log output
@@ -38,11 +39,12 @@ class LogColors:
 class EnhancedResourceAnalyzer:
     """Enhanced analyzer for project type and cloud service requirements"""
 
-    def __init__(self, repo_url: str, verbose: bool = False, model: str = 'deepseek', session_dir=None):
+    def __init__(self, repo_url: str, verbose: bool = False, model: str = 'deepseek', session_dir=None, use_api: bool = True):
         self.repo_url = repo_url
         self.verbose = verbose
         self.model = model
         self.session_dir = session_dir
+        self.use_api = use_api  # Use GitHub API instead of cloning
         self.analysis_data = {}
 
     def log(self, message: str):
@@ -57,13 +59,21 @@ class EnhancedResourceAnalyzer:
         Returns:
             CloudServiceRequirement object with project type and required services
         """
-        print(f"{LogColors.INFO}  🔍 Cloning and analyzing repository...{LogColors.RESET}")
+        if self.use_api:
+            print(f"{LogColors.INFO}  🔍 Fetching repository files via GitHub API...{LogColors.RESET}")
+        else:
+            print(f"{LogColors.INFO}  🔍 Cloning and analyzing repository...{LogColors.RESET}")
         print(f"{LogColors.DEBUG}     Repository: {self.repo_url}{LogColors.RESET}")
 
-        # Step 1: Clone repository
-        temp_dir = self._clone_repository()
+        # Step 1: Get repository files (via API or clone)
+        temp_dir = None
+        if self.use_api:
+            temp_dir = self._fetch_via_api()
+        else:
+            temp_dir = self._clone_repository()
+
         if not temp_dir:
-            print(f"{LogColors.DEBUG}  ⚠️  Failed to clone repository, using default configuration{LogColors.RESET}")
+            print(f"{LogColors.DEBUG}  ⚠️  Failed to access repository, using default configuration{LogColors.RESET}")
             return self._create_default_requirement()
 
         try:
@@ -133,6 +143,42 @@ class EnhancedResourceAnalyzer:
             # Cleanup
             self.log(f"Keeping temp dir for debugging: {temp_dir}")
 
+    def _fetch_via_api(self) -> Optional[str]:
+        """
+        Fetch repository files via GitHub API instead of cloning
+
+        Returns:
+            Path to directory containing fetched files, or None on failure
+        """
+        try:
+            # Use session directory if provided, otherwise use temp directory
+            if self.session_dir:
+                temp_dir = str(Path(self.session_dir) / "repo_api_fetch")
+                Path(temp_dir).mkdir(parents=True, exist_ok=True)
+            else:
+                temp_dir = tempfile.mkdtemp(prefix="gitcloud_api_")
+            self.log(f"Fetching files to {temp_dir}")
+
+            # Create GitHub fetcher
+            fetcher = GitHubFetcher(self.repo_url, verbose=self.verbose)
+
+            # Fetch all analysis files
+            fetched_files = fetcher.fetch_analysis_files(output_dir=temp_dir)
+
+            if len(fetched_files) > 0:
+                self.log(f"Successfully fetched {len(fetched_files)} files via API")
+                print(f"{LogColors.SUCCESS}  ✅ Fetched {len(fetched_files)} files via GitHub API{LogColors.RESET}")
+                return temp_dir
+            else:
+                self.log("No files fetched via API, falling back to clone")
+                print(f"{LogColors.DEBUG}  ⚠️  API fetch returned no files, trying clone...{LogColors.RESET}")
+                return self._clone_repository()
+
+        except Exception as e:
+            self.log(f"Error fetching via API: {e}, falling back to clone")
+            print(f"{LogColors.DEBUG}  ⚠️  API fetch failed, trying clone...{LogColors.RESET}")
+            return self._clone_repository()
+
     def _clone_repository(self) -> Optional[str]:
         """Clone repository to temporary directory"""
         try:
@@ -153,6 +199,7 @@ class EnhancedResourceAnalyzer:
 
             if result.returncode == 0:
                 self.log("Repository cloned successfully")
+                print(f"{LogColors.SUCCESS}  ✅ Repository cloned successfully{LogColors.RESET}")
                 return temp_dir
             else:
                 self.log(f"Failed to clone: {result.stderr}")
@@ -972,7 +1019,7 @@ class EnhancedResourceAnalyzer:
         )
 
 
-def analyze_cloud_services(repo_url: str, verbose: bool = False, model: str = 'deepseek', session_dir=None) -> CloudServiceRequirement:
+def analyze_cloud_services(repo_url: str, verbose: bool = False, model: str = 'deepseek', session_dir=None, use_api: bool = True) -> CloudServiceRequirement:
     """
     Convenience function to analyze repository and determine cloud service requirements
 
@@ -981,9 +1028,10 @@ def analyze_cloud_services(repo_url: str, verbose: bool = False, model: str = 'd
         verbose: Enable verbose logging
         model: AI model to use ('deepseek' or 'anthropic')
         session_dir: Optional session directory to store cloned repository
+        use_api: Use GitHub API instead of cloning (default: True)
 
     Returns:
         CloudServiceRequirement object
     """
-    analyzer = EnhancedResourceAnalyzer(repo_url, verbose=verbose, model=model, session_dir=session_dir)
+    analyzer = EnhancedResourceAnalyzer(repo_url, verbose=verbose, model=model, session_dir=session_dir, use_api=use_api)
     return analyzer.analyze()
