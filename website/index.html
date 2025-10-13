@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitCloud - Intelligent Cloud Provisioning from GitHub</title>
+    <meta name="description" content="Analyze GitHub projects with AI and automatically provision cloud resources">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="32" height="32" rx="8" fill="url(#gradient)"/>
+                        <path d="M16 8L20 12L16 16L12 12L16 8Z" fill="white"/>
+                        <path d="M16 16L20 20L16 24L12 20L16 16Z" fill="white" opacity="0.6"/>
+                        <defs>
+                            <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32">
+                                <stop offset="0%" stop-color="#6366f1"/>
+                                <stop offset="100%" stop-color="#8b5cf6"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="logo-text">GitCloud</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#features">Features</a>
+                    <a href="#how-it-works">How it Works</a>
+                    <a href="#docs">Docs</a>
+                    <a href="#github" class="github-link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="badge">Alpha Release</div>
+                <h1 class="hero-title">
+                    From GitHub to Cloud
+                    <span class="gradient-text">In Seconds</span>
+                </h1>
+                <p class="hero-description">
+                    GitCloud analyzes your GitHub repository with AI and automatically provisions
+                    the perfect cloud infrastructure to run your project.
+                </p>
+                <div class="hero-actions">
+                    <button class="btn btn-primary">
+                        Get Started
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <button class="btn btn-secondary">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                        </svg>
+                        View on GitHub
+                    </button>
+                </div>
+                <div class="install-command">
+                    <code>$ pip install gitcloud-cli</code>
+                    <button class="copy-btn" onclick="copyToClipboard('pip install gitcloud-cli')">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="5" y="5" width="9" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M3 10.5V2.5C3 1.67157 3.67157 1 4.5 1H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Animated Workflow Section -->
+    <section class="workflow-section">
+        <div class="container">
+            <h2 class="section-title">How GitCloud Works</h2>
+            <p class="section-description">Watch your GitHub project transform into running cloud infrastructure</p>
+
+            <div class="workflow-container">
+                <!-- Stage 1: GitHub -->
+                <div class="workflow-stage" id="stage-github">
+                    <div class="stage-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </div>
+                    <div class="stage-content">
+                        <h3>1. GitHub Repository</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                            </div>
+                            <pre><code>$ gitcloud --repo_url \
+  https://github.com/user/todo-app</code></pre>
+                        </div>
+                        <div class="stage-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Language:</span>
+                                <span class="detail-value typing-text" data-text="Node.js"></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Dependencies:</span>
+                                <span class="detail-value typing-text" data-text="Express, MySQL"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Arrow 1 -->
+                <div class="workflow-arrow" id="arrow-1">
+                    <div class="arrow-line">
+                        <div class="arrow-progress"></div>
+                    </div>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="url(#gradient-arrow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+
+                <!-- Stage 2: AI Analysis -->
+                <div class="workflow-stage" id="stage-ai">
+                    <div class="stage-icon ai-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M2 17L12 22L22 17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M2 12L12 17L22 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <div class="ai-pulse"></div>
+                    </div>
+                    <div class="stage-content">
+                        <h3>2. AI Analysis</h3>
+                        <div class="analysis-box">
+                            <div class="analysis-line">
+                                <span class="analysis-icon">🔍</span>
+                                <span class="analysis-text">Analyzing project structure...</span>
+                            </div>
+                            <div class="analysis-line">
+                                <span class="analysis-icon">🧠</span>
+                                <span class="analysis-text">Detecting dependencies...</span>
+                            </div>
+                            <div class="analysis-line">
+                                <span class="analysis-icon">⚙️</span>
+                                <span class="analysis-text">Planning infrastructure...</span>
+                            </div>
+                        </div>
+                        <div class="ai-recommendation">
+                            <div class="recommendation-title">Recommended Resources:</div>
+                            <div class="recommendation-items">
+                                <span class="rec-item">CVM (2 Core, 4GB)</span>
+                                <span class="rec-item">MySQL 8.0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Arrow 2 -->
+                <div class="workflow-arrow" id="arrow-2">
+                    <div class="arrow-line">
+                        <div class="arrow-progress"></div>
+                    </div>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="url(#gradient-arrow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+
+                <!-- Stage 3: Cloud Provisioning -->
+                <div class="workflow-stage" id="stage-cloud">
+                    <div class="stage-icon cloud-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <div class="cloud-particles">
+                            <div class="particle"></div>
+                            <div class="particle"></div>
+                            <div class="particle"></div>
+                        </div>
+                    </div>
+                    <div class="stage-content">
+                        <h3>3. Cloud Provisioning</h3>
+                        <div class="provision-status">
+                            <div class="status-item">
+                                <div class="status-header">
+                                    <span class="status-icon">☁️</span>
+                                    <span>Creating CVM Instance</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 100%"></div>
+                                </div>
+                            </div>
+                            <div class="status-item">
+                                <div class="status-header">
+                                    <span class="status-icon">🗄️</span>
+                                    <span>Setting up MySQL</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Arrow 3 -->
+                <div class="workflow-arrow" id="arrow-3">
+                    <div class="arrow-line">
+                        <div class="arrow-progress"></div>
+                    </div>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="url(#gradient-arrow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+
+                <!-- Stage 4: Running -->
+                <div class="workflow-stage" id="stage-running">
+                    <div class="stage-icon success-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <polyline points="22 4 12 14.01 9 11.01" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <div class="success-ring"></div>
+                    </div>
+                    <div class="stage-content">
+                        <h3>4. Your App is Live! 🎉</h3>
+                        <div class="deployment-info">
+                            <div class="info-box">
+                                <span class="info-label">Public IP:</span>
+                                <span class="info-value">43.128.45.123</span>
+                            </div>
+                            <div class="info-box">
+                                <span class="info-label">SSH Access:</span>
+                                <span class="info-value">ssh ubuntu@43.128.45.123</span>
+                            </div>
+                            <div class="info-box">
+                                <span class="info-label">Status:</span>
+                                <span class="status-badge status-running">
+                                    <span class="status-dot"></span>
+                                    Running
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workflow-timeline">
+                <div class="timeline-item active" data-stage="0">
+                    <div class="timeline-dot"></div>
+                    <span>GitHub</span>
+                </div>
+                <div class="timeline-item" data-stage="1">
+                    <div class="timeline-dot"></div>
+                    <span>AI Analysis</span>
+                </div>
+                <div class="timeline-item" data-stage="2">
+                    <div class="timeline-dot"></div>
+                    <span>Provisioning</span>
+                </div>
+                <div class="timeline-item" data-stage="3">
+                    <div class="timeline-dot"></div>
+                    <span>Running</span>
+                </div>
+            </div>
+
+            <button class="replay-btn" id="replay-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M1 4v6h6M23 20v-6h-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Replay Animation
+            </button>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <h2 class="section-title">Built for Developers</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI-Powered Analysis</h3>
+                    <p>Leverages DeepSeek or Claude to intelligently analyze your codebase and determine optimal infrastructure.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>One Command Deploy</h3>
+                    <p>From GitHub URL to running cloud infrastructure in seconds. No configuration files needed.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">☁️</div>
+                    <h3>Cloud Native</h3>
+                    <p>Automatically provisions CVM instances, databases, and networking on Tencent Cloud.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure by Default</h3>
+                    <p>All credentials stored locally. Direct communication with cloud APIs only.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧹</div>
+                    <h3>Easy Cleanup</h3>
+                    <p>Manage and clean up provisioned resources with simple commands. No orphaned resources.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Multi-Language Support</h3>
+                    <p>Currently supports Node.js and Go projects, with more languages coming soon.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Deploy?</h2>
+                <p>Get your GitHub projects running in the cloud with zero configuration.</p>
+                <div class="cta-code">
+                    <pre><code>$ pip install gitcloud-cli
+$ gitcloud --repo_url https://github.com/your/project</code></pre>
+                </div>
+                <a href="#" class="btn btn-primary btn-large">Get Started Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <div class="logo">
+                        <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="32" height="32" rx="8" fill="url(#gradient)"/>
+                            <path d="M16 8L20 12L16 16L12 12L16 8Z" fill="white"/>
+                            <path d="M16 16L20 20L16 24L12 20L16 16Z" fill="white" opacity="0.6"/>
+                        </svg>
+                        <span class="logo-text">GitCloud</span>
+                    </div>
+                    <p class="footer-description">Intelligent cloud provisioning from GitHub</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <a href="#features">Features</a>
+                        <a href="#how-it-works">How it Works</a>
+                        <a href="#docs">Documentation</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Resources</h4>
+                        <a href="#github">GitHub</a>
+                        <a href="#examples">Examples</a>
+                        <a href="#support">Support</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 GitCloud. Alpha Release.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SVG Definitions -->
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <linearGradient id="gradient-arrow" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#6366f1"/>
+                <stop offset="100%" stop-color="#8b5cf6"/>
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
