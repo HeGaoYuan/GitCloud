@@ -81,13 +81,6 @@ gitcloud --repo_url https://github.com/itzabhinavarya/ToDo-Application
 gitcloud --repo_url https://github.com/ichtrojan/go-todo
 ```
 
-### Known Issues
-- Large repositories may fail during cloning
-- Unsupported languages will be rejected with an error message
-- Unsupported cloud services (Redis, GPU, etc.) will cause execution to stop
-- AI analysis is required; failures will stop execution
-- Some edge cases may not provision correctly
-
 ## Important Notes
 
 ⚠️ **Cloud Charges**: Cloud resources may incur charges. Always monitor your cloud provider console and use the `gitcloud clean` command to remove resources.
