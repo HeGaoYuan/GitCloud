@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitCloud - Intelligent Cloud Provisioning from GitHub</title>
+    <title>GitCloud - Run GitHub in Cloud Intelligent</title>
     <meta name="description" content="Analyze GitHub projects with AI and automatically provision cloud resources">
     <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,10 +30,9 @@
                     <span class="logo-text">GitCloud</span>
                 </div>
                 <div class="nav-links">
-                    <a href="#features">Features</a>
                     <a href="#how-it-works">How it Works</a>
-                    <a href="#docs">Docs</a>
-                    <a href="#github" class="github-link">
+                    <a href="#features">Features</a>
+                    <a href="https://github.com/HeGaoYuan/GitCloud" target="_blank" class="github-link">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                         </svg>
@@ -58,34 +57,28 @@
                     the perfect cloud infrastructure to run your project.
                 </p>
                 <div class="hero-actions">
-                    <button class="btn btn-primary">
-                        Get Started
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                    <button class="btn btn-secondary">
+                    <a href="https://github.com/HeGaoYuan/GitCloud" target="_blank" class="btn btn-secondary">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                             <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
                         </svg>
                         View on GitHub
-                    </button>
+                    </a>
                 </div>
-                <div class="install-command">
+                <!-- <div class="install-command">
                     <code>$ pip install gitcloud-cli</code>
-                    <button class="copy-btn" onclick="copyToClipboard('pip install gitcloud-cli')">
+                    <button class="copy-btn" onclick="copyToClipboard('pip install gitcloud-cli', event)">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="5" y="5" width="9" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/>
                             <path d="M3 10.5V2.5C3 1.67157 3.67157 1 4.5 1H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                         </svg>
                     </button>
-                </div>
+                </div> -->
             </div>
         </div>
     </section>
 
     <!-- Animated Workflow Section -->
-    <section class="workflow-section">
+    <section class="workflow-section" id="how-it-works">
         <div class="container">
             <h2 class="section-title">How GitCloud Works</h2>
             <p class="section-description">Watch your GitHub project transform into running cloud infrastructure</p>
@@ -105,16 +98,16 @@
                                 <span class="code-lang">bash</span>
                             </div>
                             <pre><code>$ gitcloud --repo_url \
-  https://github.com/user/todo-app</code></pre>
+  https://github.com/ichtrojan/go-todo</code></pre>
                         </div>
                         <div class="stage-details">
                             <div class="detail-item">
                                 <span class="detail-label">Language:</span>
-                                <span class="detail-value typing-text" data-text="Node.js"></span>
+                                <span class="detail-value typing-text" data-text="Golang"></span>
                             </div>
                             <div class="detail-item">
                                 <span class="detail-label">Dependencies:</span>
-                                <span class="detail-value typing-text" data-text="Express, MySQL"></span>
+                                <span class="detail-value typing-text" data-text="MySQL"></span>
                             </div>
                         </div>
                     </div>
@@ -240,8 +233,8 @@
                                 <span class="info-value">43.128.45.123</span>
                             </div>
                             <div class="info-box">
-                                <span class="info-label">SSH Access:</span>
-                                <span class="info-value">ssh ubuntu@43.128.45.123</span>
+                                <span class="info-label">Web Access:</span>
+                                <span class="info-value">http://43.128.45.123</span>
                             </div>
                             <div class="info-box">
                                 <span class="info-label">Status:</span>
@@ -328,9 +321,10 @@
         <div class="container">
             <div class="cta-content">
                 <h2>Ready to Deploy?</h2>
-                <p>Get your GitHub projects running in the cloud with zero configuration.</p>
+                <p>Get your GitHub projects running in the cloud in seconds.</p>
                 <div class="cta-code">
-                    <pre><code>$ pip install gitcloud-cli
+                    <pre><code>$ git clone git@github.com:HeGaoYuan/GitCloud.git
+$ pip install .
 $ gitcloud --repo_url https://github.com/your/project</code></pre>
                 </div>
                 <a href="#" class="btn btn-primary btn-large">Get Started Now</a>
@@ -351,20 +345,17 @@ $ gitcloud --repo_url https://github.com/your/project</code></pre>
                         </svg>
                         <span class="logo-text">GitCloud</span>
                     </div>
-                    <p class="footer-description">Intelligent cloud provisioning from GitHub</p>
+                    <p class="footer-description">Run GitHub in Cloud Intelligent</p>
                 </div>
                 <div class="footer-links">
                     <div class="footer-column">
                         <h4>Product</h4>
-                        <a href="#features">Features</a>
                         <a href="#how-it-works">How it Works</a>
-                        <a href="#docs">Documentation</a>
+                        <a href="#features">Features</a>
                     </div>
                     <div class="footer-column">
                         <h4>Resources</h4>
-                        <a href="#github">GitHub</a>
-                        <a href="#examples">Examples</a>
-                        <a href="#support">Support</a>
+                        <a href="https://github.com/HeGaoYuan/GitCloud" target="_blank">GitHub</a>
                     </div>
                 </div>
             </div>

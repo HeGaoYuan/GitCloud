@@ -235,7 +235,7 @@ class WorkflowAnimation {
 }
 
 // Copy to Clipboard functionality
-function copyToClipboard(text) {
+function copyToClipboard(text, event) {
     navigator.clipboard.writeText(text).then(() => {
         // Show feedback
         const btn = event.target.closest('.copy-btn');
@@ -261,7 +261,7 @@ function setupSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
-            if (href === '#' || href === '#github') return; // Skip these
+            if (href === '#') return; // Skip empty anchors
 
             e.preventDefault();
             const target = document.querySelector(href);
@@ -281,7 +281,6 @@ function setupSmoothScroll() {
 // Navbar scroll effect
 function setupNavbarScroll() {
     const nav = document.querySelector('.nav');
-    let lastScroll = 0;
 
     window.addEventListener('scroll', () => {
         const currentScroll = window.pageYOffset;
@@ -293,8 +292,6 @@ function setupNavbarScroll() {
             nav.style.background = 'rgba(10, 10, 15, 0.8)';
             nav.style.boxShadow = 'none';
         }
-
-        lastScroll = currentScroll;
     });
 }
 

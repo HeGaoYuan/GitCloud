@@ -6,5 +6,5 @@
  | |__| | | |_| |____| | (_) | |_| | (_| |
   \_____|_|\__|\_____|_|\___/ \__,_|\__,_|
 
-  Run GitHub in Cloud Intelligently
+  Run GitHub in Cloud Intelligent
 
