@@ -1,0 +1,46 @@
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# Credentials
+*.json
+!requirements.txt
+.gitcloud/
+
+# SSH keys
+*_key
+*_key.pub
+*.pem
+
+# Logs
+*.log
+/tmp/
+
+# Test and debug scripts
+test_*.py
+
+# Python cache (duplicate but ensure it's here)
+*.pyc
+__pycache__/

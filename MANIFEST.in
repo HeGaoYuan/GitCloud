@@ -1,0 +1,4 @@
+include banner.txt
+include README.md
+include LICENSE
+recursive-include gitcloud *.py
