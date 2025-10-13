@@ -385,9 +385,6 @@ Examples:
   # Specify model and API key
   gitcloud --repo_url https://github.com/user/project --model deepseek --api-key YOUR_KEY
 
-  # Save analysis to file only (no provisioning)
-  gitcloud --repo_url https://github.com/user/project --analyze-only --output analysis.json
-
   # Clean up a session
   gitcloud clean session_20250113_143022
         """
@@ -420,8 +417,6 @@ Examples:
                        help='API key for the AI model')
     parser.add_argument('--analyze-only', action='store_true',
                        help='Only analyze project, do not provision resources')
-    parser.add_argument('--output', '-o', type=str,
-                       help='Output file for analysis results')
     parser.add_argument('--save-dockerfile', action='store_true',
                        help='Save recommended Dockerfile')
 
@@ -552,12 +547,6 @@ Examples:
 
         print_step("STEP 3: Provider Specification")
         print_debug(json.dumps(provider_spec, indent=2))
-
-        # Save analysis if output file specified
-        if args.output:
-            with open(args.output, 'w') as f:
-                json.dump(provider_spec, f, indent=2)
-            print_success(f"\n💾 Analysis saved to: {args.output}")
 
         # Stop here if analyze-only
         if args.analyze_only:
