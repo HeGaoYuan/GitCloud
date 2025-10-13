@@ -983,20 +983,26 @@ body {
     font-size: 14px;
 }
 
+/* Scroll hint for mobile */
+.scroll-hint {
+    display: none;
+    text-align: center;
+    font-size: 13px;
+    color: var(--color-text-tertiary);
+    margin-bottom: 16px;
+    font-weight: 500;
+    animation: fade-pulse 2s ease-in-out infinite;
+}
+
+@keyframes fade-pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
 /* ========================================
    Responsive Design
    ======================================== */
 @media (max-width: 1024px) {
-    .workflow-container {
-        grid-template-columns: 1fr;
-        gap: 40px;
-    }
-
-    .workflow-arrow {
-        transform: rotate(90deg);
-        grid-column: span 1;
-    }
-
     .features-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -1007,50 +1013,364 @@ body {
 }
 
 @media (max-width: 768px) {
+    /* Navigation */
+    .nav-content {
+        height: 64px;
+    }
+
+    .logo-text {
+        font-size: 18px;
+    }
+
     .nav-links {
-        gap: 20px;
+        gap: 8px;
+        font-size: 13px;
     }
 
-    .nav-links a span {
-        display: none;
+    .nav-links a {
+        padding: 6px 10px;
     }
 
+    .github-link {
+        padding: 6px 10px;
+    }
+
+    .github-link svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Hero Section */
     .hero {
-        padding: 120px 0 80px;
+        padding: 100px 0 60px;
     }
 
     .hero-title {
-        font-size: 40px;
+        font-size: 36px;
+        margin-bottom: 16px;
     }
 
     .hero-description {
-        font-size: 18px;
+        font-size: 16px;
+        margin-bottom: 32px;
     }
 
     .hero-actions {
         flex-direction: column;
+        gap: 12px;
     }
 
     .btn {
         width: 100%;
         justify-content: center;
+        padding: 12px 24px;
+        font-size: 15px;
+    }
+
+    .install-command {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px 16px;
+        font-size: 12px;
+    }
+
+    .install-command code {
+        word-break: break-all;
+    }
+
+    /* Workflow Section */
+    .workflow-section {
+        padding: 80px 0;
+    }
+
+    .section-title {
+        font-size: 32px;
+        margin-bottom: 12px;
+    }
+
+    .section-description {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    .scroll-hint {
+        display: block;
+    }
+
+    .workflow-container {
+        display: flex;
+        overflow-x: auto;
+        overflow-y: hidden;
+        gap: 12px;
+        padding: 20px 0;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    .workflow-container::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .workflow-container::-webkit-scrollbar-track {
+        background: var(--color-bg-secondary);
+        border-radius: 3px;
+    }
+
+    .workflow-container::-webkit-scrollbar-thumb {
+        background: var(--color-border);
+        border-radius: 3px;
+    }
+
+    .workflow-stage {
+        flex: 0 0 280px;
+        scroll-snap-align: center;
+    }
+
+    .workflow-arrow {
+        flex: 0 0 40px;
+        transform: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .workflow-arrow svg {
+        transform: none;
+    }
+
+    .stage-icon {
+        width: 56px;
+        height: 56px;
+        margin-bottom: 12px;
+    }
+
+    .stage-icon svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    .stage-content {
+        padding: 16px;
+    }
+
+    .stage-content h3 {
+        font-size: 15px;
+        margin-bottom: 12px;
+    }
+
+    .code-block {
+        font-size: 11px;
+    }
+
+    .code-block pre {
+        padding: 12px;
+    }
+
+    .detail-item,
+    .analysis-line,
+    .status-header,
+    .info-box {
+        font-size: 11px;
+        padding: 6px 10px;
+    }
+
+    .analysis-icon,
+    .status-icon {
+        font-size: 14px;
+    }
+
+    .rec-item {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+
+    .workflow-timeline {
+        gap: 20px;
+        padding: 0 20px;
+    }
+
+    .timeline-item span {
+        font-size: 11px;
+    }
+
+    .replay-btn {
+        font-size: 13px;
+        padding: 10px 20px;
+    }
+
+    /* Features Section */
+    .features-section {
+        padding: 80px 0;
     }
 
     .features-grid {
         grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .feature-card {
+        padding: 24px;
+    }
+
+    .feature-icon {
+        font-size: 32px;
+        margin-bottom: 16px;
+    }
+
+    .feature-card h3 {
+        font-size: 18px;
+    }
+
+    .feature-card p {
+        font-size: 14px;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        padding: 60px 0;
+    }
+
+    .cta-content h2 {
+        font-size: 32px;
+        margin-bottom: 12px;
+    }
+
+    .cta-content p {
+        font-size: 16px;
+        margin-bottom: 24px;
+    }
+
+    .cta-code {
+        padding: 16px;
+        margin-bottom: 24px;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    .command-line {
+        font-size: 11px;
+        line-height: 1.6;
+        white-space: nowrap;
+    }
+
+    .command-prompt {
+        margin-right: 8px;
+    }
+
+    .btn-large {
+        padding: 14px 28px;
+        font-size: 16px;
+    }
+
+    /* Footer */
+    .footer {
+        padding: 60px 0 32px;
     }
 
     .footer-content {
         grid-template-columns: 1fr;
-        gap: 40px;
+        gap: 32px;
+    }
+
+    .footer-links {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
+
+    .footer-column h4 {
+        font-size: 13px;
+    }
+
+    .footer-column a {
+        font-size: 14px;
+    }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 16px;
+    }
+
+    .hero-title {
+        font-size: 28px;
+    }
+
+    .hero-description {
+        font-size: 15px;
     }
 
     .section-title {
-        font-size: 36px;
+        font-size: 28px;
+    }
+
+    .section-description {
+        font-size: 15px;
+    }
+
+    .nav-links a {
+        font-size: 12px;
+        padding: 6px 8px;
+    }
+
+    .github-link {
+        padding: 6px 8px;
+    }
+
+    /* Workflow adjustments for very small screens */
+    .workflow-stage {
+        flex: 0 0 240px;
+    }
+
+    .workflow-arrow {
+        flex: 0 0 32px;
+    }
+
+    .stage-icon {
+        width: 48px;
+        height: 48px;
+    }
+
+    .stage-icon svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .stage-content {
+        padding: 12px;
+    }
+
+    .stage-content h3 {
+        font-size: 14px;
+    }
+
+    .code-block,
+    .detail-item,
+    .analysis-line,
+    .status-header,
+    .info-box {
+        font-size: 10px;
     }
 
     .workflow-timeline {
-        gap: 30px;
-        font-size: 12px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .timeline-item span {
+        font-size: 10px;
+    }
+
+    .cta-code {
+        padding: 12px;
+    }
+
+    .command-line {
+        font-size: 10px;
+    }
+
+    .footer-links {
+        grid-template-columns: 1fr;
     }
 }
