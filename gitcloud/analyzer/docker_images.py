@@ -222,23 +222,18 @@ def get_recommended_image(
 
     Args:
         project_type: 项目类型
-        gpu_required: 是否需要 GPU
-        detected_language: 检测到的主要编程语言 (如 'golang', 'python', 'nodejs' 等)
+        gpu_required: 是否需要 GPU (保留用于未来扩展)
+        detected_language: 检测到的主要编程语言 (如 'golang', 'nodejs' 等)
 
     Returns:
         镜像信息字典，包含 image, description, includes, dockerhub_url
     """
-    # 如果需要 GPU，且是 ML 相关项目，使用 GPU 镜像
-    if gpu_required and project_type in [
-        ProjectType.ML_TRAINING,
-        ProjectType.ML_INFERENCE,
-        ProjectType.DEEP_LEARNING,
-        ProjectType.LLM_SERVICE
-    ]:
-        image_key = "ml_gpu"
+    # Alpha version: only support nodejs and golang
+    # GPU support will be added in future versions
+
     # 如果检测到具体编程语言，优先使用语言特定镜像
-    elif detected_language:
-        # 语言到镜像的映射
+    if detected_language:
+        # 语言到镜像的映射 (Alpha: only nodejs and golang)
         language_to_image = {
             'golang': 'golang',
             'go': 'golang',
@@ -246,26 +241,23 @@ def get_recommended_image(
             'node': 'nodejs',
             'javascript': 'nodejs',
             'typescript': 'nodejs',
-            'python': 'python',
-            'python_deps': 'python',
-            'python_setup': 'python',
-            'python_modern': 'python',
-            'java': 'java',
-            'java_maven': 'java',
-            'java_gradle': 'java',
-            'rust': 'rust',
-            'php': 'polyglot',  # 可以后续添加 PHP 镜像
-            'ruby': 'polyglot',  # 可以后续添加 Ruby 镜像
         }
 
         image_key = language_to_image.get(detected_language.lower())
 
-        # 如果映射表中没有找到，或者返回值无效，fallback 到项目类型映射
+        # 如果映射表中没有找到，返回默认
         if not image_key or image_key not in CLAUDE_CODE_BASE_IMAGES:
-            image_key = PROJECT_TYPE_TO_IMAGE.get(project_type, "polyglot")
+            # Default to nodejs for web projects, golang for others
+            if 'web' in project_type.value.lower() or 'frontend' in project_type.value.lower():
+                image_key = 'nodejs'
+            else:
+                image_key = 'golang'
     else:
-        # 根据项目类型获取镜像
-        image_key = PROJECT_TYPE_TO_IMAGE.get(project_type, "polyglot")
+        # 根据项目类型获取镜像 (default to nodejs or golang)
+        if 'web' in project_type.value.lower() or 'frontend' in project_type.value.lower():
+            image_key = 'nodejs'
+        else:
+            image_key = 'golang'
 
     return CLAUDE_CODE_BASE_IMAGES[image_key]
 

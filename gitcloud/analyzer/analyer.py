@@ -13,9 +13,11 @@ import re
 import json
 import subprocess
 import tempfile
+import sys
 from pathlib import Path
 from typing import Optional, Dict, Any, List, Tuple
 from urllib.parse import urlparse
+import requests
 
 from .cloud_service_spec import (
     CloudServiceRequirement,
@@ -32,7 +34,17 @@ class LogColors:
     INFO = '\033[96m'      # Cyan
     SUCCESS = '\033[1;32m' # Bold Green
     DEBUG = '\033[2;37m'   # Dim White
+    ERROR = '\033[1;31m'   # Bold Red
+    WARNING = '\033[1;33m' # Bold Yellow
     RESET = '\033[0m'
+
+
+# Supported languages for alpha version
+SUPPORTED_LANGUAGES = ['golang', 'nodejs', 'javascript', 'typescript']
+MAX_REPO_SIZE_MB = 200
+
+# Supported cloud services for alpha version
+SUPPORTED_SERVICES = ['CVM', 'MYSQL']
 
 
 class EnhancedResourceAnalyzer:
@@ -50,6 +62,153 @@ class EnhancedResourceAnalyzer:
         if self.verbose:
             print(f"[ResourceAnalyzer] {message}")
 
+    def _check_repository_size(self) -> bool:
+        """
+        Check repository size by counting commits (simple and reliable)
+
+        Returns:
+            True if repository is acceptable size, False otherwise
+        """
+        try:
+            print(f"{LogColors.INFO}  📊 Checking repository size...{LogColors.RESET}")
+
+            # Use git ls-remote to count commits without cloning
+            result = subprocess.run(
+                ["git", "ls-remote", "--heads", self.repo_url],
+                capture_output=True,
+                timeout=30,
+                text=True
+            )
+
+            if result.returncode != 0:
+                print(f"{LogColors.WARNING}  ⚠️  Unable to check repository, proceeding anyway{LogColors.RESET}")
+                return True
+
+            # Count number of branches as a simple heuristic
+            branches = len(result.stdout.strip().split('\n')) if result.stdout.strip() else 0
+
+            # Try to get commit count from default branch
+            result = subprocess.run(
+                ["git", "ls-remote", self.repo_url, "HEAD"],
+                capture_output=True,
+                timeout=30,
+                text=True
+            )
+
+            if result.returncode == 0 and result.stdout.strip():
+                # Repository exists and is accessible
+                print(f"{LogColors.DEBUG}     Branches detected: {branches}{LogColors.RESET}")
+
+                # If too many branches, likely a large repo
+                if branches > 100:
+                    print(f"\n{LogColors.ERROR}{'='*70}{LogColors.RESET}")
+                    print(f"{LogColors.ERROR}❌ REPOSITORY TOO LARGE{LogColors.RESET}")
+                    print(f"{LogColors.ERROR}{'='*70}{LogColors.RESET}")
+                    print(f"{LogColors.WARNING}  Repository has {branches} branches (likely very large){LogColors.RESET}")
+                    print()
+                    print(f"{LogColors.INFO}GitCloud is currently in alpha and has the following limitations:{LogColors.RESET}")
+                    print(f"{LogColors.INFO}  • Only small to medium-sized repositories are supported{LogColors.RESET}")
+                    print(f"{LogColors.INFO}  • Only Node.js and Go projects are supported{LogColors.RESET}")
+                    print()
+                    print(f"{LogColors.INFO}Try our example repositories instead:{LogColors.RESET}")
+                    print(f"  {LogColors.DEBUG}gitcloud --repo_url https://github.com/itzabhinavarya/ToDo-Application{LogColors.RESET}")
+                    print(f"  {LogColors.DEBUG}gitcloud --repo_url https://github.com/ichtrojan/go-todo{LogColors.RESET}")
+                    print(f"{LogColors.ERROR}{'='*70}{LogColors.RESET}\n")
+                    return False
+
+                print(f"{LogColors.SUCCESS}  ✅ Repository size OK{LogColors.RESET}")
+                return True
+            else:
+                print(f"{LogColors.WARNING}  ⚠️  Unable to verify repository, proceeding anyway{LogColors.RESET}")
+                return True
+
+        except subprocess.TimeoutExpired:
+            print(f"{LogColors.WARNING}  ⚠️  Repository check timed out, proceeding anyway{LogColors.RESET}")
+            return True
+        except Exception as e:
+            print(f"{LogColors.WARNING}  ⚠️  Error checking repository: {str(e)}{LogColors.RESET}")
+            # Don't block on check failures
+            return True
+
+    def _validate_language_support(self, primary_language: Optional[str]) -> bool:
+        """
+        Validate if the detected primary language is supported in alpha version
+
+        Args:
+            primary_language: Detected primary language
+
+        Returns:
+            True if supported, False otherwise
+        """
+        if not primary_language:
+            print(f"{LogColors.WARNING}  ⚠️  Unable to detect primary language{LogColors.RESET}")
+            return False
+
+        language_lower = primary_language.lower()
+
+        # Check if language is supported
+        is_supported = any(lang in language_lower for lang in SUPPORTED_LANGUAGES)
+
+        if not is_supported:
+            print(f"\n{LogColors.ERROR}{'='*70}{LogColors.RESET}")
+            print(f"{LogColors.ERROR}❌ UNSUPPORTED LANGUAGE{LogColors.RESET}")
+            print(f"{LogColors.ERROR}{'='*70}{LogColors.RESET}")
+            print(f"{LogColors.WARNING}  Detected language: {primary_language}{LogColors.RESET}")
+            print(f"{LogColors.WARNING}  Supported languages: Node.js, Go{LogColors.RESET}")
+            print()
+            print(f"{LogColors.INFO}GitCloud is currently in alpha and only supports:{LogColors.RESET}")
+            print(f"{LogColors.INFO}  • Node.js / JavaScript / TypeScript projects{LogColors.RESET}")
+            print(f"{LogColors.INFO}  • Go (Golang) projects{LogColors.RESET}")
+            print()
+            print(f"{LogColors.INFO}Try our example repositories instead:{LogColors.RESET}")
+            print(f"  {LogColors.DEBUG}Node.js: gitcloud --repo_url https://github.com/itzabhinavarya/ToDo-Application{LogColors.RESET}")
+            print(f"  {LogColors.DEBUG}Go:      gitcloud --repo_url https://github.com/ichtrojan/go-todo{LogColors.RESET}")
+            print(f"{LogColors.ERROR}{'='*70}{LogColors.RESET}\n")
+            return False
+
+        print(f"{LogColors.SUCCESS}  ✅ Language supported: {primary_language}{LogColors.RESET}")
+        return True
+
+    def _validate_cloud_services(self, required_services: List) -> bool:
+        """
+        Validate if all required cloud services are supported in alpha version
+
+        Args:
+            required_services: List of ServiceRequirement objects
+
+        Returns:
+            True if all services are supported, False otherwise
+        """
+        unsupported_services = []
+
+        for service in required_services:
+            service_type = service.service_type.value.upper()
+            if service_type not in SUPPORTED_SERVICES:
+                unsupported_services.append(service_type)
+
+        if unsupported_services:
+            print(f"\n{LogColors.ERROR}{'='*70}{LogColors.RESET}")
+            print(f"{LogColors.ERROR}❌ UNSUPPORTED CLOUD SERVICES REQUIRED{LogColors.RESET}")
+            print(f"{LogColors.ERROR}{'='*70}{LogColors.RESET}")
+            print(f"{LogColors.WARNING}  Required services: {', '.join([s.service_type.value for s in required_services])}{LogColors.RESET}")
+            print(f"{LogColors.WARNING}  Unsupported: {', '.join(unsupported_services)}{LogColors.RESET}")
+            print(f"{LogColors.WARNING}  Supported services: CVM, MySQL{LogColors.RESET}")
+            print()
+            print(f"{LogColors.INFO}GitCloud is currently in alpha and only supports:{LogColors.RESET}")
+            print(f"{LogColors.INFO}  • CVM (Cloud Virtual Machine){LogColors.RESET}")
+            print(f"{LogColors.INFO}  • MySQL Database{LogColors.RESET}")
+            print()
+            print(f"{LogColors.INFO}Services like Redis, Object Storage, CDN, GPU, etc. are not yet supported.{LogColors.RESET}")
+            print()
+            print(f"{LogColors.INFO}Try our example repositories instead:{LogColors.RESET}")
+            print(f"  {LogColors.DEBUG}Node.js: gitcloud --repo_url https://github.com/itzabhinavarya/ToDo-Application{LogColors.RESET}")
+            print(f"  {LogColors.DEBUG}Go:      gitcloud --repo_url https://github.com/ichtrojan/go-todo{LogColors.RESET}")
+            print(f"{LogColors.ERROR}{'='*70}{LogColors.RESET}\n")
+            return False
+
+        print(f"{LogColors.SUCCESS}  ✅ All required cloud services are supported{LogColors.RESET}")
+        return True
+
     def analyze(self) -> CloudServiceRequirement:
         """
         Perform complete analysis and return cloud service requirements
@@ -57,8 +216,13 @@ class EnhancedResourceAnalyzer:
         Returns:
             CloudServiceRequirement object with project type and required services
         """
-        print(f"{LogColors.INFO}  🔍 Cloning and analyzing repository...{LogColors.RESET}")
+        print(f"{LogColors.INFO}  🔍 Validating and analyzing repository...{LogColors.RESET}")
         print(f"{LogColors.DEBUG}     Repository: {self.repo_url}{LogColors.RESET}")
+
+        # Step 0: Check repository size before cloning
+        if not self._check_repository_size():
+            print(f"{LogColors.ERROR}❌ Repository validation failed. Exiting.{LogColors.RESET}")
+            sys.exit(1)
 
         # Step 1: Clone repository
         temp_dir = self._clone_repository()
@@ -78,56 +242,37 @@ class EnhancedResourceAnalyzer:
             # Step 4: Read key files for AI analysis
             self._read_key_files(temp_dir)
 
-            # Step 5: Try AI analysis first (if available)
-            print(f"{LogColors.INFO}  🤖 Attempting AI-powered analysis...{LogColors.RESET}")
+            # Step 5: Try AI analysis (required, no fallback)
+            print(f"{LogColors.INFO}  🤖 Running AI-powered analysis...{LogColors.RESET}")
             ai_requirement = self._ai_analyze_comprehensive(temp_dir)
 
-            if ai_requirement:
-                print(f"{LogColors.SUCCESS}  ✅ AI analysis successful{LogColors.RESET}")
-                return ai_requirement
+            if not ai_requirement:
+                print(f"\n{LogColors.ERROR}{'='*70}{LogColors.RESET}")
+                print(f"{LogColors.ERROR}❌ AI ANALYSIS FAILED{LogColors.RESET}")
+                print(f"{LogColors.ERROR}{'='*70}{LogColors.RESET}")
+                print(f"{LogColors.WARNING}GitCloud requires AI analysis to properly configure cloud resources.{LogColors.RESET}")
+                print(f"{LogColors.WARNING}This may be due to:{LogColors.RESET}")
+                print(f"{LogColors.INFO}  • API key not configured correctly{LogColors.RESET}")
+                print(f"{LogColors.INFO}  • Network connectivity issues{LogColors.RESET}")
+                print(f"{LogColors.INFO}  • API rate limits{LogColors.RESET}")
+                print()
+                print(f"{LogColors.INFO}Please check your API configuration and try again.{LogColors.RESET}")
+                print(f"{LogColors.ERROR}{'='*70}{LogColors.RESET}\n")
+                sys.exit(1)
 
-            # Step 6: Fallback to rule-based analysis
-            print(f"{LogColors.INFO}  ⚙️  Using rule-based analysis...{LogColors.RESET}")
+            print(f"{LogColors.SUCCESS}  ✅ AI analysis successful{LogColors.RESET}")
 
-            # Detect project type (comprehensive classification)
-            project_type, subtype, features = self._detect_project_type_comprehensive(temp_dir)
-            self.analysis_data['project_type'] = project_type
-            self.analysis_data['subtype'] = subtype
-            self.analysis_data['features'] = features
+            # Step 6: Validate language support
+            if not self._validate_language_support(ai_requirement.primary_language):
+                print(f"{LogColors.ERROR}❌ Language validation failed. Exiting.{LogColors.RESET}")
+                sys.exit(1)
 
-            # Determine required cloud services
-            required_services = self._determine_cloud_services(project_type, features, temp_dir)
+            # Step 7: Validate cloud services
+            if not self._validate_cloud_services(ai_requirement.required_services):
+                print(f"{LogColors.ERROR}❌ Cloud services validation failed. Exiting.{LogColors.RESET}")
+                sys.exit(1)
 
-            # Generate CVM and database configurations
-            cvm_config, db_config = self._generate_service_configs(project_type, features)
-
-            # Detect primary language
-            primary_language = self._detect_primary_language()
-
-            # Calculate confidence
-            confidence = self._calculate_confidence(features)
-
-            # Create requirement object
-            requirement = CloudServiceRequirement(
-                project_type=project_type,
-                project_subtype=subtype,
-                primary_language=primary_language,
-                required_services=required_services,
-                cvm_config=cvm_config,
-                database_config=db_config,
-                confidence=confidence,
-                analysis_reasoning=self._build_reasoning(project_type, features),
-                detected_features=features
-            )
-
-            print(f"\n{LogColors.SUCCESS}  ✅ Analysis completed{LogColors.RESET}")
-            print(f"{LogColors.DEBUG}     Project Type: {project_type.value}{LogColors.RESET}")
-            if subtype:
-                print(f"{LogColors.DEBUG}     Subtype: {subtype}{LogColors.RESET}")
-            print(f"{LogColors.DEBUG}     Confidence: {confidence:.1%}{LogColors.RESET}")
-            print(f"{LogColors.DEBUG}     Required Services: {len(required_services)}{LogColors.RESET}")
-
-            return requirement
+            return ai_requirement
 
         finally:
             # Cleanup

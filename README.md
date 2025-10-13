@@ -50,8 +50,46 @@ All configuration is saved to `~/.gitcloud/config.json` for future use.
 - DeepSeek or Anthropic API key
 
 
+## Current Limitations (Alpha Version)
+
+⚠️ **GitCloud is in alpha stage** with the following limitations:
+
+### Supported Languages
+Currently, only the following languages are supported:
+- **Node.js** (JavaScript/TypeScript)
+- **Go** (Golang)
+
+### Supported Cloud Services
+Currently, only the following cloud services can be provisioned:
+- **CVM** (Cloud Virtual Machine)
+- **MySQL** Database
+
+Projects requiring Redis, Object Storage, CDN, GPU, or other services are not yet supported.
+
+### Repository Size Limit
+- Maximum repository size: **200 MB**
+- Repositories with 100+ branches will be rejected
+- Larger repositories cannot be analyzed due to cloning overhead
+
+### Recommended Test Repositories
+Try these verified examples to get started:
+```bash
+# Node.js Todo Application
+gitcloud --repo_url https://github.com/itzabhinavarya/ToDo-Application
+
+# Go Todo API
+gitcloud --repo_url https://github.com/ichtrojan/go-todo
+```
+
+### Known Issues
+- Large repositories may fail during cloning
+- Unsupported languages will be rejected with an error message
+- Unsupported cloud services (Redis, GPU, etc.) will cause execution to stop
+- AI analysis is required; failures will stop execution
+- Some edge cases may not provision correctly
+
 ## Important Notes
 
-⚠️ **Alpha Software**: GitCloud is currently in alpha. Cloud resources may incur charges. Always monitor your cloud provider console.
+⚠️ **Cloud Charges**: Cloud resources may incur charges. Always monitor your cloud provider console and use the `gitcloud clean` command to remove resources.
 
 🔒 **Privacy**: All credentials are stored locally in `~/.gitcloud/config.json` and never sent to external servers except official cloud provider APIs.
