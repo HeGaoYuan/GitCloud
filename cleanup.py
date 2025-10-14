@@ -153,7 +153,7 @@ def cleanup_cloud_resources(resources, region):
             except Exception as e:
                 print(f"   ⚠️  Failed to terminate CVM: {e}")
 
-        # Isolate MySQL instance
+        # Isolate and offline MySQL instance
         if resources['mysql_instance_id']:
             try:
                 print(f"   🗄️  Isolating MySQL: {resources['mysql_instance_id']}")
@@ -162,8 +162,21 @@ def cleanup_cloud_resources(resources, region):
                 req.from_json_string(json.dumps(params))
                 cdb_cli.IsolateDBInstance(req)
                 print(f"   ✅ MySQL instance isolated")
+
+                # Wait for isolation to complete
+                import time
+                print(f"   ⏳ Waiting for isolation to complete (10 seconds)...")
+                time.sleep(10)
+
+                # Offline the isolated instance
+                print(f"   🗄️  Offlining MySQL: {resources['mysql_instance_id']}")
+                req = cdb_models.OfflineIsolatedInstancesRequest()
+                params = {"InstanceIds": [resources['mysql_instance_id']]}
+                req.from_json_string(json.dumps(params))
+                cdb_cli.OfflineIsolatedInstances(req)
+                print(f"   ✅ MySQL instance offlined")
             except Exception as e:
-                print(f"   ⚠️  Failed to isolate MySQL: {e}")
+                print(f"   ⚠️  Failed to isolate/offline MySQL: {e}")
 
         # Wait a bit for resources to detach
         import time
@@ -171,41 +184,65 @@ def cleanup_cloud_resources(resources, region):
             print("   ⏳ Waiting for resources to detach (30 seconds)...")
             time.sleep(30)
 
-        # Delete security groups
-        for sg_id in resources['security_group_ids']:
-            try:
-                print(f"   🛡️  Deleting security group: {sg_id}")
-                req = vpc_models.DeleteSecurityGroupRequest()
-                params = {"SecurityGroupId": sg_id}
-                req.from_json_string(json.dumps(params))
-                vpc_cli.DeleteSecurityGroup(req)
-                print(f"   ✅ Security group deleted")
-            except Exception as e:
-                print(f"   ⚠️  Failed to delete security group {sg_id}: {e}")
+        # Helper function for retry logic
+        def retry_delete(operation_name, delete_func, max_retries=3, delay=10):
+            """Retry delete operation with exponential backoff"""
+            for attempt in range(max_retries):
+                try:
+                    delete_func()
+                    return True
+                except Exception as e:
+                    if attempt < max_retries - 1:
+                        print(f"   ⚠️  Attempt {attempt + 1} failed: {str(e)[:80]}")
+                        print(f"   ⏳ Waiting {delay} seconds before retry...")
+                        time.sleep(delay)
+                    else:
+                        print(f"   ❌ Failed after {max_retries} attempts: {str(e)[:100]}")
+                        return False
+            return False
 
-        # Delete subnets
+        # Delete subnets FIRST (before security groups)
+        print("\n   🌐 Deleting subnets...")
         for subnet_id in resources['subnets']:
-            try:
-                print(f"   🌐 Deleting subnet: {subnet_id}")
+            print(f"   🌐 Deleting subnet: {subnet_id}")
+
+            def delete_subnet():
                 req = vpc_models.DeleteSubnetRequest()
                 params = {"SubnetId": subnet_id}
                 req.from_json_string(json.dumps(params))
                 vpc_cli.DeleteSubnet(req)
-                print(f"   ✅ Subnet deleted")
-            except Exception as e:
-                print(f"   ⚠️  Failed to delete subnet {subnet_id}: {e}")
+                print(f"   ✅ Subnet {subnet_id} deleted")
 
-        # Delete VPC
+            retry_delete(f"subnet {subnet_id}", delete_subnet)
+            time.sleep(10)  # Wait between deletions
+
+        # Delete security groups SECOND (after subnets)
+        print("\n   🛡️  Deleting security groups...")
+        for sg_id in resources['security_group_ids']:
+            print(f"   🛡️  Deleting security group: {sg_id}")
+
+            def delete_sg():
+                req = vpc_models.DeleteSecurityGroupRequest()
+                params = {"SecurityGroupId": sg_id}
+                req.from_json_string(json.dumps(params))
+                vpc_cli.DeleteSecurityGroup(req)
+                print(f"   ✅ Security group {sg_id} deleted")
+
+            retry_delete(f"security group {sg_id}", delete_sg)
+            time.sleep(10)  # Wait between deletions
+
+        # Delete VPC LAST (after everything else)
         if resources['vpc_id']:
-            try:
-                print(f"   🌐 Deleting VPC: {resources['vpc_id']}")
+            print(f"\n   🌐 Deleting VPC: {resources['vpc_id']}")
+
+            def delete_vpc():
                 req = vpc_models.DeleteVpcRequest()
                 params = {"VpcId": resources['vpc_id']}
                 req.from_json_string(json.dumps(params))
                 vpc_cli.DeleteVpc(req)
-                print(f"   ✅ VPC deleted")
-            except Exception as e:
-                print(f"   ⚠️  Failed to delete VPC: {e}")
+                print(f"   ✅ VPC {resources['vpc_id']} deleted")
+
+            retry_delete(f"VPC {resources['vpc_id']}", delete_vpc)
 
         print("\n✅ Cloud resources cleanup completed")
         return True
