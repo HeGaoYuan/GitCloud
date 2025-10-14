@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gitcloud-cli"
+version = "0.1.0"
+description = "Intelligent cloud provisioning tool for GitHub projects"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+keywords = ["cloud", "provisioning", "github", "automation", "devops"]
+authors = [
+    {name = "GitCloud Team", email = "your.email@example.com"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Build Tools",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "anthropic>=0.18.0",
+    "tencentcloud-sdk-python>=3.0.1090",
+    "requests>=2.31.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/HeGaoYuan/GitCloud"
+Repository = "https://github.com/HeGaoYuan/GitCloud"
+Issues = "https://github.com/HeGaoYuan/GitCloud/issues"
+
+[project.scripts]
+gitcloud = "main:main"
+
+[tool.setuptools]
+py-modules = ["main", "cleanup"]
+
+[tool.setuptools.packages.find]
+include = ["gitcloud*"]
+
+[tool.setuptools.package-data]
+"*" = ["banner.txt"]
