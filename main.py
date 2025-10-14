@@ -582,11 +582,9 @@ Examples:
             print_success("\n✅ Analysis completed (--analyze-only mode)")
             return 0
 
-        # Step 4: Confirm provisioning
-        print_step("STEP 4: Resource Provisioning Confirmation")
-        print_warning("\n⚠️  CLOUD RESOURCE PROVISIONING WARNING")
-        print("This will create real cloud resources that may incur charges.")
-        print("\nResources to be created:")
+        # Step 4: Show resources to be created
+        print_step("STEP 4: Resources to be Provisioned")
+        print("\nThe following resources will be created:")
         if provider_spec.get('cvm'):
             cvm = provider_spec['cvm']
             print(f"  {Colors.INFO}• CVM: {Colors.RESET}{cvm.get('cpu_cores')} CPU, {cvm.get('memory_gb')} GB RAM, {cvm.get('disk_gb')} GB Disk")
@@ -596,11 +594,7 @@ Examples:
             mysql = provider_spec['mysql']
             print(f"  {Colors.INFO}• MySQL: {Colors.RESET}{mysql.get('cpu_cores')} CPU, {mysql.get('memory_mb')} MB RAM, {mysql.get('storage_gb')} GB Storage")
         print(f"{Colors.STEP}{'='*70}{Colors.RESET}")
-
-        confirm = clean_input("\nProceed with provisioning? Press ENTER to confirm, or type 'n' to cancel: ").strip().lower()
-        if confirm == 'n' or confirm == 'no':
-            print_error("❌ Provisioning cancelled by user")
-            return 0
+        print()
 
         # Step 5: Provision cloud resources
         print_step("STEP 5: Provisioning Cloud Resources")
