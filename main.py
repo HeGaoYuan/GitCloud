@@ -454,6 +454,8 @@ Examples:
     print()
 
     # Validate repo_url for main command - prompt if not provided
+    repo_url_provided_via_cli = bool(args.repo_url)
+
     if not args.repo_url:
         print("\n" + "="*70)
         print("📦 GitHub Repository URL")
@@ -474,11 +476,14 @@ Examples:
     args.github_url = args.repo_url
 
     try:
-        # Confirmation prompt
-        print("="*70)
-        print("Press ENTER to continue...")
-        print("="*70)
-        input()
+        # Only show confirmation prompt if repo_url was provided via CLI
+        # (to separate banner from warnings)
+        if repo_url_provided_via_cli:
+            print("="*70)
+            print("Press ENTER to continue...")
+            print("="*70)
+            input()
+            print()
 
         # Show disclaimers
         show_disclaimer()
