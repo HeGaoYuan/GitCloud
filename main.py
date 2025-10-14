@@ -108,14 +108,37 @@ def clean_input(prompt=''):
 
 def show_banner():
     """Display GitCloud banner"""
-    banner_path = Path(__file__).parent / 'banner.txt'
-    if banner_path.exists():
-        with open(banner_path, 'r', encoding='utf-8') as f:
-            print(f.read())
-    else:
-        print("\n" + "="*70)
-        print("🚀 GitCloud - Run GitHub in Cloud Intelligently")
-        print("="*70)
+    # Embedded banner as fallback
+    BANNER = """
+  ██████╗ ██╗████████╗ ██████╗██╗      ██████╗ ██╗   ██╗██████╗
+ ██╔════╝ ██║╚══██╔══╝██╔════╝██║     ██╔═══██╗██║   ██║██╔══██╗
+ ██║  ███╗██║   ██║   ██║     ██║     ██║   ██║██║   ██║██║  ██║
+ ██║   ██║██║   ██║   ██║     ██║     ██║   ██║██║   ██║██║  ██║
+ ╚██████╔╝██║   ██║   ╚██████╗███████╗╚██████╔╝╚██████╔╝██████╔╝
+  ╚═════╝ ╚═╝   ╚═╝    ╚═════╝╚══════╝ ╚═════╝  ╚═════╝ ╚═════╝
+
+
+  Run GitHub in Cloud Intelligently
+"""
+
+    # Try multiple locations for banner.txt
+    possible_paths = [
+        Path(__file__).parent / 'banner.txt',  # Development mode
+        Path(__file__).parent.parent / 'banner.txt',  # Installed mode (one level up)
+    ]
+
+    # Try file paths first
+    for banner_path in possible_paths:
+        if banner_path.exists():
+            try:
+                with open(banner_path, 'r', encoding='utf-8') as f:
+                    print(f.read())
+                return
+            except:
+                pass
+
+    # Fallback to embedded banner
+    print(BANNER)
 
 
 def show_disclaimer():

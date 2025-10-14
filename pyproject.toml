@@ -42,6 +42,7 @@ gitcloud = "main:main"
 
 [tool.setuptools]
 py-modules = ["main", "cleanup"]
+include-package-data = true
 
 [tool.setuptools.packages.find]
 include = ["gitcloud*"]
