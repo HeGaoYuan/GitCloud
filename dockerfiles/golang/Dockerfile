@@ -7,6 +7,8 @@ RUN apt-get update && \
     curl \
     git \
     vim \
+    net-tools \
+    mysql-client-core-8.0 \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
