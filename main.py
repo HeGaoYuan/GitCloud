@@ -449,6 +449,10 @@ Examples:
         import cleanup
         return cleanup.main_with_args(args)
 
+    # Show banner at the beginning (before any user interaction)
+    show_banner()
+    print()
+
     # Validate repo_url for main command - prompt if not provided
     if not args.repo_url:
         print("\n" + "="*70)
@@ -470,9 +474,8 @@ Examples:
     args.github_url = args.repo_url
 
     try:
-        # Show banner
-        show_banner()
-        print("\n" + "="*70)
+        # Confirmation prompt
+        print("="*70)
         print("Press ENTER to continue...")
         print("="*70)
         input()
