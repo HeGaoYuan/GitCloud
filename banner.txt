@@ -8,5 +8,5 @@
   ╚═════╝ ╚═╝   ╚═╝    ╚═════╝╚══════╝ ╚═════╝  ╚═════╝ ╚═════╝ 
   
   
-  Run GitHub in Cloud Intelligent
+  Run GitHub in Cloud Intelligently
 
