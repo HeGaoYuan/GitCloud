@@ -825,6 +825,102 @@ body {
 }
 
 /* ========================================
+   Video Section
+   ======================================== */
+.video-section {
+    padding: 120px 0;
+    background: var(--color-bg-secondary);
+}
+
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    margin-top: 60px;
+}
+
+.video-card {
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 0.3s;
+}
+
+.video-card:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.video-header {
+    margin-bottom: 24px;
+}
+
+.video-icon {
+    font-size: 36px;
+    margin-bottom: 16px;
+}
+
+.video-card h3 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--color-text-primary);
+}
+
+.video-description {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    background: var(--color-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    margin-bottom: 16px;
+}
+
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.video-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.video-duration {
+    font-size: 13px;
+    color: var(--color-text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.video-label {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid var(--color-accent);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ========================================
    Features Section
    ======================================== */
 .features-section {
@@ -1197,6 +1293,39 @@ body {
     .replay-btn {
         font-size: 13px;
         padding: 10px 20px;
+    }
+
+    /* Video Section */
+    .video-section {
+        padding: 80px 0;
+    }
+
+    .videos-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .video-card {
+        padding: 24px;
+    }
+
+    .video-icon {
+        font-size: 28px;
+        margin-bottom: 12px;
+    }
+
+    .video-card h3 {
+        font-size: 18px;
+    }
+
+    .video-description {
+        font-size: 13px;
+    }
+
+    .video-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
     }
 
     /* Features Section */
